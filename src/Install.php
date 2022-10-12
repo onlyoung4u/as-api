@@ -12,7 +12,7 @@ class Install
     protected static $pathRelation = [
         '.env.example' => '.env.example',
         'config/plugin/onlyoung4u/as-api' => 'config/plugin/onlyoung4u/as-api',
-        'database/migrations.php' => 'database/migrations',
+        'database/migrations' => 'database/migrations',
         'database/seeds' => 'database/seeds',
     ];
 

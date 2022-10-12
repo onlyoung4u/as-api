@@ -2,7 +2,7 @@
 
 ## 安装
 ```shell
-composer require onlyoung4u/as-api
+composer require -W onlyoung4u/as-api
 ```
 
 ## 环境变量
