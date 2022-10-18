@@ -35,10 +35,10 @@ class LogsController extends Base
 
         $sql = AsActionLog::with('operator:id,username,nickname')
             ->when($uid != 1, function ($query) use ($ids) {
-                $query->whereIn('id', $ids);
+                $query->whereIn('action_uid', $ids);
             })
             ->when(!empty($userId), function ($query) use ($userId) {
-                $query->where('id', $userId);
+                $query->where('action_uid', $userId);
             });
 
         $total = $sql->count();
@@ -52,7 +52,7 @@ class LogsController extends Base
                     $item->operator = json_decode($item->action_user, true);
                 }
 
-                $item->full_path = implode('/', AsMenu::getFullPathName($item->rout_name));
+                $item->full_path = implode('/', AsMenu::getFullPathName($item->route_name));
 
                 return $item;
             });

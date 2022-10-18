@@ -26,3 +26,38 @@ env('key', 'default')
 'admin' => \Onlyoung4u\AsApi\Kernel\Exception\Handler::class,
 'AsApi' => \Onlyoung4u\AsApi\Kernel\Exception\Handler::class,
 ```
+
+## 迁移命令
+```shell
+# 创建
+php vendor/bin/phinx create MyNewMigration
+
+# 全部迁移
+php vendor/bin/phinx migrate
+# 指定迁移目标版本
+php vendor/bin/phinx migrate -t 20220101000001
+```
+## 填充命令
+```shell
+# 创建
+php vendor/bin/phinx seed:create MyNewSeeder
+
+# 全部填充
+php vendor/bin/phinx seed:run
+# 指定填充文件
+php vendor/bin/phinx seed:run -s MyNewSeeder
+```
+
+## 处理 404
+> 在配置文件 config/route.php 里加上如下配置
+```php
+Route::fallback(function () {
+    return json(['code' => 404, 'msg' => '404 not found', 'data' => (object)[]]);
+});
+```
+
+## 关闭默认路由
+> 在配置文件 config/route.php 里最后一行加上如下配置
+```php
+Route::disableDefaultRoute();
+```

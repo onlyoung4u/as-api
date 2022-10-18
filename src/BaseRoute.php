@@ -33,7 +33,11 @@ class BaseRoute
         /**
          * 登录
          */
-        Route::post('/admin/login', [AuthController::class, 'login'])->name('login');
+        Route::post('/admin/login', [AuthController::class, 'login'])
+            ->name('login')
+            ->middleware([
+                config('plugin.onlyoung4u.as-api.app.middleware.action_log', ActionLog::class),
+            ]);
 
         /**
          * 公共路由

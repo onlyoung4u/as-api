@@ -12,10 +12,10 @@
     "illuminate/pagination": "^9.0",
     "illuminate/redis": "^9.0",
     "illuminate/events": "^9.0",
+    "illuminate/validation": "^9.0",
     "robmorgan/phinx": "^0.12.12",
     "vlucas/phpdotenv": "^5.4",
-    "firebase/php-jwt": "^6.3",
-    "workerman/validation": "^3.0"
+    "firebase/php-jwt": "^6.3"
   },
   "autoload": {
     "psr-4": {

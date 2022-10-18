@@ -5,7 +5,6 @@ namespace Onlyoung4u\AsApi\Controller;
 use Onlyoung4u\AsApi\Helpers\AsConstant;
 use Onlyoung4u\AsApi\Model\AsRole;
 use Onlyoung4u\AsApi\Model\AsUser;
-use Respect\Validation\Validator as v;
 use support\Request;
 use support\Response;
 
@@ -33,13 +32,13 @@ class UserController extends Base
             ->when($uid > 1, function ($query) use ($uid) {
                 $query->where('created_by', $uid);
             })
-            ->when(v::intVal()->min(1)->validate($id), function ($query) use ($id) {
+            ->when(as_validate($id, 'required|integer|min:1'), function ($query) use ($id) {
                 $query->where('id', $id);
             })
-            ->when(v::stringType()->length(1, 60)->validate($username), function ($query) use ($username) {
+            ->when(as_validate($username, 'required|string|between:1,60'), function ($query) use ($username) {
                 $query->where('username', 'like', '%' . $username . '%');
             })
-            ->when(v::stringType()->length(1, 60)->validate($nickname), function ($query) use ($nickname) {
+            ->when(as_validate($nickname, 'required|string|between:1,60'), function ($query) use ($nickname) {
                 $query->where('nickname', 'like', '%' . $nickname . '%');
             });
 
@@ -80,16 +79,14 @@ class UserController extends Base
      */
     private function userParams(Request $request, bool $isUpdate = false): array
     {
-        $passwordRule = $isUpdate ?
-            v::nullable(v::stringType()->length(8, 20))->setName('密码') :
-            v::stringType()->length(8, 20)->setName('密码');
+        $passwordRule = $isUpdate ? ['nullable|string|between:8,20', '密码'] : ['required|string|between:8,20', '密码'];
 
         $data = $this->validateParams($request->all(), [
-            'username' => v::stringType()->length(1, 255)->setName('账号'),
-            'nickname' => v::stringType()->length(1, 255)->setName('名称'),
+            'username' => ['required|string|between:4,255', '账号'],
+            'nickname' => ['required|string|between:1,255', '名称'],
             'password' => $passwordRule,
-            'status' => v::boolType(),
-            'roles' => v::arrayType()->length(1),
+            'status' => ['required|boolean', '状态'],
+            'roles' => ['required|array|min:1', '角色'],
         ]);
 
         $data['status'] = $data['status'] ? 1 : 0;
@@ -147,7 +144,7 @@ class UserController extends Base
         $type = $request->input('type');
 
         $this->validateParams(compact('type'), [
-            'type' => v::boolType(),
+            'type' => ['required|boolean', '类型'],
         ]);
 
         AsUser::setStatus($id, $type, $request->uid);

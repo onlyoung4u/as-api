@@ -4,7 +4,6 @@ namespace Onlyoung4u\AsApi\Controller;
 
 use Onlyoung4u\AsApi\Model\AsMenu;
 use Onlyoung4u\AsApi\Model\AsRole;
-use Respect\Validation\Validator as v;
 use support\Request;
 use support\Response;
 
@@ -13,11 +12,12 @@ class RoleController extends Base
     /**
      * 获取用户拥有的菜单树
      *
+     * @param Request $request
      * @return Response
      */
-    public function menuTree(): Response
+    public function menuTree(Request $request): Response
     {
-        $tree = AsMenu::getRoleMenu(false);
+        $tree = AsMenu::getRoleMenu($request->uid, false);
 
         return $this->success($tree);
     }
@@ -36,7 +36,7 @@ class RoleController extends Base
         $uid = $request->uid;
         $name = $request->input('name');
 
-        $page = AsMenu::with(['owner:id,username,nickname'])
+        $page = AsRole::with(['owner:id,username,nickname'])
             ->when($uid !== 1, function ($query) use ($uid) {
                 $query->where('created_by', $uid);
             })
@@ -78,8 +78,8 @@ class RoleController extends Base
         $permissions = $request->input('permissions');
 
         $this->validateParams(compact('name', 'permissions'), [
-            'name' => v::stringType()->length(1, 255),
-            'permissions' => v::arrayType()->length(1),
+            'name' => ['required|string|between:1,255', '名称'],
+            'permissions' => ['required|array|min:1', '权限'],
         ]);
 
         return [$name, $permissions];

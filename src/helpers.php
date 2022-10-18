@@ -1,6 +1,7 @@
 <?php
 
 use Onlyoung4u\AsApi\Helpers\Bcrypt;
+use Onlyoung4u\AsApi\Kernel\AsValidator;
 
 if (!function_exists('as_bcrypt')) {
     /**
@@ -31,5 +32,23 @@ if (!function_exists('as_bcrypt_check')) {
         $client = new Bcrypt();
 
         return $client->check($value, $hashedValue);
+    }
+}
+
+if (!function_exists('as_validate')) {
+    /**
+     * 单个参数验证
+     *
+     * @param $param
+     * @param string $rule
+     * @return bool
+     */
+    function as_validate($param, string $rule)
+    {
+        $v = AsValidator::validate(compact('param'), [
+            'param' => $rule,
+        ]);
+
+        return !$v->fails();
     }
 }

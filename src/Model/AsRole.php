@@ -35,7 +35,9 @@ class AsRole extends BaseModel
      */
     public static function getUserRules(int $uid): array
     {
-        if ($uid == 1) return AsMenu::getAllMenu('k');
+        if ($uid == 1) {
+            return AsMenu::orderBy('pid')->orderBy('sort')->pluck('key')->toArray();
+        }
 
         return PermissionCheck::init()->getUserPermissions($uid);
     }
@@ -138,7 +140,7 @@ class AsRole extends BaseModel
     public static function store(string $name, array $permissions, int $uid, int $id = 0): void
     {
         try {
-            if (!PermissionCheck::init()->isUserHasPermissions($uid, $permissions)) {
+            if ($uid > 1 && !PermissionCheck::init()->isUserHasPermissions($uid, $permissions)) {
                 throw new AsErrorException('越级赋权');
             }
 

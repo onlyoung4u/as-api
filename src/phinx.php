@@ -1,14 +1,7 @@
 <?php
 
 require_once __DIR__ . '/vendor/autoload.php';
-
-use Dotenv\Dotenv;
-
-if (method_exists('Dotenv\Dotenv', 'createUnsafeImmutable')) {
-    Dotenv::createUnsafeImmutable(base_path())->load();
-} else {
-    Dotenv::createMutable(base_path())->load();
-}
+require_once __DIR__ . '/support/bootstrap.php';
 
 return
 [

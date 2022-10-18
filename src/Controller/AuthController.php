@@ -8,7 +8,6 @@ use Onlyoung4u\AsApi\Kernel\Exception\AsErrorException;
 use Onlyoung4u\AsApi\Model\AsMenu;
 use Onlyoung4u\AsApi\Model\AsRole;
 use Onlyoung4u\AsApi\Model\AsUser;
-use Respect\Validation\Validator as v;
 use support\Request;
 use support\Response;
 
@@ -27,8 +26,8 @@ class AuthController extends Base
         $password = $request->input('password');
 
         $this->validateParams(compact('username', 'password'), [
-            'username' => v::stringType()->length(1, 255)->setName('用户名'),
-            'password' => v::stringType()->length(1, 255)->setName('密码'),
+            'username' => ['required|string|between:4,255', '用户名'],
+            'password' => ['required|string|between:8,20', '密码'],
         ]);
 
         $user = AsUser::where('username', $username)
@@ -144,8 +143,8 @@ class AuthController extends Base
         $password = $request->input('password');
 
         $this->validateParams(compact('pwd', 'password'), [
-            'pwd' => v::stringType()->length(8, 20),
-            'password' => v::stringType()->length(8, 20),
+            'pwd' => ['required|string|between:8,20', '旧密码'],
+            'password' => ['required|string|between:8,20', '新密码'],
         ]);
 
         $user = AsUser::find($request->uid);

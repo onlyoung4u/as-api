@@ -99,8 +99,13 @@ class AsUser extends BaseModel
             }
 
             foreach ($data as $key => $value) {
-                if ($value == null || $key == 'roles') continue;
+                if ($key == 'password' || $key == 'roles') continue;
                 $sql->$key = $value;
+            }
+
+            // 密码
+            if (isset($data['password'])) {
+                $sql->password = as_bcrypt($data['password']);
             }
 
             $sql->save();

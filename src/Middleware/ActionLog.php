@@ -61,8 +61,8 @@ class ActionLog implements MiddlewareInterface
             $content = $request->all();
 
             $log->status = $status;
-            $log->rout_path = $request->path();
-            $log->rout_name = $request->route->getName();
+            $log->route_path = $request->path();
+            $log->route_name = $request->route->getName();
             $log->ip = $request->getRealIp();
             $log->method = $request->method();
             $log->action_uid = $uid;
