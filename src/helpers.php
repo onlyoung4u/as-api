@@ -12,7 +12,7 @@ if (!function_exists('as_bcrypt')) {
      * @param array $options
      * @return string
      */
-    function as_bcrypt($value, $options = []): string
+    function as_bcrypt(string $value, array $options = []): string
     {
         $client = new Bcrypt();
 
@@ -28,7 +28,7 @@ if (!function_exists('as_bcrypt_check')) {
      * @param string $hashedValue
      * @return bool
      */
-    function as_bcrypt_check($value, $hashedValue): bool
+    function as_bcrypt_check(string $value, string $hashedValue): bool
     {
         $client = new Bcrypt();
 
@@ -58,13 +58,12 @@ if (!function_exists('as_validate_id')) {
     /**
      * 正整数参数验证
      *
-     * @param $param
-     * @param string $rule
+     * @param $id
      * @return bool
      */
     function as_validate_id($id): bool
     {
-        if (!is_string($id) || !is_numeric($id)) return false;
+        if (!is_string($id) && !is_numeric($id)) return false;
         return preg_match('/^[1-9][0-9]*$/', $id) === 1;
     }
 }
@@ -98,7 +97,8 @@ if (!function_exists('as_generate_unique_id')) {
      * @param string $prefix
      * @return string
      */
-    function as_generate_unique_id(string $prefix = '') {
+    function as_generate_unique_id(string $prefix = ''): string
+    {
         return uniqid($prefix) . time();
     }
 }
@@ -110,7 +110,8 @@ if (!function_exists('as_get_file_extension')) {
      * @param string $fileName
      * @return string
      */
-    function as_get_file_extension(string $fileName) {
+    function as_get_file_extension(string $fileName): string
+    {
         $arr = explode('.', $fileName);
         $len = count($arr);
 
@@ -127,12 +128,54 @@ if (!function_exists('as_file_date_path')) {
      *
      * @param string $extension
      * @param string $path
+     * @param string $subPath
      * @return string
      */
-    function as_file_date_path(string $extension, string $path = ''): string
+    function as_file_date_path(string $extension, string $path = '', string $subPath = ''): string
     {
-        $datePath = Carbon::now()->format('Y/m/d/') . as_generate_unique_id() . '.' . $extension;
+        $datePath = as_path_combine(Carbon::now()->format('Y/m/d/'), $subPath);
+
+        if (!empty($extension)) {
+            if (!str_ends_with($datePath, '/')) $datePath .= '/';
+            $datePath .= as_generate_unique_id() . '.' . $extension;
+        }
 
         return as_path_combine($path, $datePath);
+    }
+}
+
+if (!function_exists('as_get_file_url')) {
+    /**
+     * 获取文件URL
+     *
+     * @param string $path
+     * @return string
+     */
+    function as_get_file_url(string $path): string
+    {
+        if (empty($path)) return '';
+
+        if (str_starts_with($path, 'http')) return $path;
+
+        $prefix = config('plugin.onlyoung4u.as-api.app.upload_file.url', 'http://127.0.0.1:8787/');
+
+        return as_path_combine($prefix, $path);
+    }
+}
+
+if (!function_exists('as_get_file_path')) {
+    /**
+     * 获取文件路径
+     *
+     * @param string $url
+     * @return string
+     */
+    function as_get_file_path(string $url): string
+    {
+        if (empty($url)) return '';
+
+        $prefix = config('plugin.onlyoung4u.as-api.app.upload_file.url', 'http://127.0.0.1:8787/');
+
+        return str_replace($prefix, '', $url);
     }
 }

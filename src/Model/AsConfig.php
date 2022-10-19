@@ -3,6 +3,7 @@
 namespace Onlyoung4u\AsApi\Model;
 
 use DateTimeInterface;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Onlyoung4u\AsApi\Kernel\Exception\AsErrorException;
 use support\Db;
 use support\Redis;
@@ -43,6 +44,18 @@ class AsConfig extends BaseModel
     }
 
     /**
+     * 状态访问器
+     *
+     * @return Attribute
+     */
+    protected function status(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => $value == 1,
+        );
+    }
+
+    /**
      * 获取静态配置项
      *
      * @param string $type
@@ -61,44 +74,6 @@ class AsConfig extends BaseModel
         }
 
         return $data;
-    }
-
-    /**
-     * 获取 URL 前缀
-     *
-     * @return string
-     */
-    public static function getUrlPrefix(): string
-    {
-        return config('plugin.onlyoung4u.as-api.app.index_url', 'http://127.0.0.1:8787/');
-    }
-
-    /**
-     * 获取文件地址
-     *
-     * @param string $path
-     * @return string
-     */
-    public static function getFileUrl(string $path): string
-    {
-        if (empty($path)) return '';
-
-        if (str_starts_with($path, 'http')) return $path;
-
-        return as_path_combine(self::getUrlPrefix(), $path);
-    }
-
-    /**
-     * 获取文件路径
-     *
-     * @param string $url
-     * @return string
-     */
-    public static function getFilePath(string $url): string
-    {
-        if (empty($url)) return '';
-
-        return str_replace(self::getUrlPrefix(), '', $url);
     }
 
     /**
@@ -125,7 +100,7 @@ class AsConfig extends BaseModel
                 foreach ($list as $item) {
                     $name = $item['name'];
                     $path = $item['path'];
-                    $url = self::getFileUrl($path);
+                    $url = as_get_file_url($path);
 
                     $res[] = compact('name', 'path', 'url');
                 }
@@ -161,7 +136,7 @@ class AsConfig extends BaseModel
                 foreach ($list as $item) {
                     $data[] = [
                         'name' => $item['name'],
-                        'path' => self::getFilePath($item['path'] ?? $item['url'] ?? ''),
+                        'path' => as_get_file_path($item['path'] ?? $item['url'] ?? ''),
                     ];
                 }
 

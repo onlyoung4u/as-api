@@ -64,7 +64,9 @@ class BaseRoute
             Route::get('/config/dict', [ConfigController::class, 'configDict'])->name('config.dict');
 
             // 通用上传
-             Route::post('/upload', [UploadController::class, 'upload'])->name('upload');
+            Route::post('/upload', [UploadController::class, 'upload'])->name('upload');
+            // 分片上传
+            Route::post('/upload_slice', [UploadController::class, 'uploadSlice'])->name('upload');
         })->middleware([
             config('plugin.onlyoung4u.as-api.app.middleware.auth', Auth::class),
             config('plugin.onlyoung4u.as-api.app.middleware.action_log', ActionLog::class),

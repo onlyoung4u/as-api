@@ -36,8 +36,7 @@ class ConfigController extends Base
         $group = $request->input('group');
         $keyword = $request->input('keyword');
 
-        $sql = AsConfig::where('status', AsConstant::STATUS_AVAILABLE)
-            ->when(isset(AsConfig::GROUP[$group]), function ($query) use ($group) {
+        $sql = AsConfig::when(isset(AsConfig::GROUP[$group]), function ($query) use ($group) {
                 $query->where('group', $group);
             })
             ->when(!empty($keyword), function ($query) use ($keyword) {
@@ -179,7 +178,10 @@ class ConfigController extends Base
      */
     public function configGroup()
     {
-        $list = AsConfig::groupBy('group')->pluck('group')->toArray();
+        $list = AsConfig::where('status', AsConstant::STATUS_AVAILABLE)
+            ->groupBy('group')
+            ->pluck('group')
+            ->toArray();
 
         return $this->success($list);
     }
@@ -196,7 +198,8 @@ class ConfigController extends Base
 
         if (empty($group)) return $this->errorParam();
 
-        $list = AsConfig::where('group', $group)
+        $list = AsConfig::where('status', AsConstant::STATUS_AVAILABLE)
+            ->where('group', $group)
             ->get()
             ->map(function ($item) {
                 $options = [];

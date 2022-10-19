@@ -11,9 +11,10 @@ return [
         'permission' => \Onlyoung4u\AsApi\Middleware\Permission::class,
     ],
 
-    'index_url' => 'http://127.0.0.1:8787/',
-
-    'upload_base_path' => 'storage',
+    'upload_file' => [
+        'url' => 'http://127.0.0.1:8787/',
+        'base_path' => 'storage',
+    ],
 
     'cors' => [
         'origin' => '*',
