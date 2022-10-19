@@ -88,11 +88,11 @@ final class CreateBaseTable extends AbstractMigration
             ->create();
 
         // 系统设置
-        $systemConfig = $this->table('as_config');
+        $systemConfig = $this->table('as_configs');
         $systemConfig->addColumn('group', 'string', ['comment' => '配置分组'])
-            ->addColumn('name', 'string', ['comment' => '配置名称'])
             ->addColumn('type', 'string', ['comment' => '配置类型'])
-            ->addColumn('title', 'string', ['comment' => '配置说明'])
+            ->addColumn('key', 'string', ['comment' => '配置key'])
+            ->addColumn('name', 'string', ['comment' => '配置名称'])
             ->addColumn('value', 'text', ['null' => true, 'comment' => '配置值'])
             ->addColumn('extra', 'string', ['default' => '', 'comment' => '配置额外参数'])
             ->addColumn('remark', 'string', ['default' => '', 'comment' => '配置说明'])
@@ -101,7 +101,7 @@ final class CreateBaseTable extends AbstractMigration
             ->addTimestamps()
             ->addIndex(['group'])
             ->addIndex(['type'])
-            ->addIndex(['name'], ['unique' => true])
+            ->addIndex(['key'], ['unique' => true])
             ->create();
     }
 }

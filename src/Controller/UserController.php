@@ -32,7 +32,7 @@ class UserController extends Base
             ->when($uid > 1, function ($query) use ($uid) {
                 $query->where('created_by', $uid);
             })
-            ->when(as_validate($id, 'required|integer|min:1'), function ($query) use ($id) {
+            ->when(as_validate_id($id), function ($query) use ($id) {
                 $query->where('id', $id);
             })
             ->when(as_validate($username, 'required|string|between:1,60'), function ($query) use ($username) {

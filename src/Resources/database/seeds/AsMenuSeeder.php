@@ -11,6 +11,7 @@ class AsMenuSeeder extends AbstractSeed
             'create' => '添加',
             'update' => '编辑',
             'delete' => '删除',
+            'sort' => '排序',
         ];
 
         $data = [];
@@ -46,6 +47,55 @@ class AsMenuSeeder extends AbstractSeed
 
         // 清空表
         $table->truncate();
+
+        // 系统设置
+        $data = [
+            'key' => 'system',
+            'name' => 'system',
+            'title' => '系统设置',
+            'redirect' => '/system/configs',
+            'icon' => 'ant-design:setting-filled',
+            'pid' => 0,
+            'sort' => 99,
+        ];
+
+        $table->insert($data)->saveData();
+
+        $pid = $this->getAdapter()->getConnection()->lastInsertId();
+
+        $data = [
+            'key' => 'system.configs',
+            'name' => 'configs',
+            'title' => '系统设置',
+            'pid' => $pid,
+        ];
+
+        $table->insert($data)->saveData();
+
+        $data = [
+            [
+                'name' => 'store',
+                'key' => 'system.configs.store',
+                'title' => '保存',
+                'hidden' => 1,
+                'pid' => $this->getAdapter()->getConnection()->lastInsertId(),
+            ]
+        ];
+
+        $table->insert($data)->save();
+
+        $data = [
+            'key' => 'system.config.list',
+            'name' => 'config',
+            'title' => '配置管理',
+            'pid' => $pid,
+        ];
+
+        $table->insert($data)->saveData();
+
+        $data = $this->getActions('system.config', $this->getAdapter()->getConnection()->lastInsertId(), ['create', 'update', 'delete', 'sort']);
+
+        $table->insert($data)->saveData();
 
         // 管理员
         $data = [

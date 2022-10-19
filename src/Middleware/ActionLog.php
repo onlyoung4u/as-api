@@ -31,7 +31,7 @@ class ActionLog implements MiddlewareInterface
 
             // 用户信息
             $userInfo = '{}';
-            $uid = AsUser::getCurrentUserId(false);
+            $uid = $request->uid ?? AsUser::getCurrentUserId(false);
 
             if ($uid > 0) {
                 $user = AsUser::find($uid);

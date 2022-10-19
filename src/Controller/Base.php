@@ -4,7 +4,7 @@ namespace Onlyoung4u\AsApi\Controller;
 
 use Onlyoung4u\AsApi\Kernel\Exception\AsErrorException;
 use Onlyoung4u\AsApi\Kernel\Traits\AsResponse;
-use Onlyoung4u\AsApi\Kernel\AsValidator;
+use Onlyoung4u\AsApi\Helpers\AsValidator;
 use support\Request;
 
 class Base
@@ -39,6 +39,31 @@ class Base
     }
 
     /**
+     * 验证参数
+     *
+     * @param array $params
+     * @param array $rules
+     * @return array
+     * @throws AsErrorException
+     */
+    protected function validateParamsWithoutErrorMessage(array $params, array $rules): array
+    {
+        try {
+            $v = AsValidator::validate($params, $rules);
+
+            if ($v->fails()) {
+                throw new AsErrorException('', $this->CodeAdapter()::STATUS_ERROR_PARAM);
+            }
+
+            return $v->validated();
+        } catch (AsErrorException $exception) {
+            throw $exception;
+        } catch (\Throwable) {
+            throw new AsErrorException('', $this->CodeAdapter()::STATUS_ERROR_PARAM);
+        }
+    }
+
+    /**
      * 验证ID
      *
      * @param $id
@@ -48,7 +73,7 @@ class Base
      */
     protected function validateId($id, bool $withResponse = false): bool
     {
-        $res = as_validate($id, 'required|integer|min:1');
+        $res = as_validate_id($id);
 
         if (!$res && $withResponse) {
             throw new AsErrorException('', $this->CodeAdapter()::STATUS_ERROR_PARAM);

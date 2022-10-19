@@ -3,8 +3,10 @@
 namespace Onlyoung4u\AsApi;
 
 use Onlyoung4u\AsApi\Controller\AuthController;
+use Onlyoung4u\AsApi\Controller\ConfigController;
 use Onlyoung4u\AsApi\Controller\LogsController;
 use Onlyoung4u\AsApi\Controller\RoleController;
+use Onlyoung4u\AsApi\Controller\UploadController;
 use Onlyoung4u\AsApi\Controller\UserController;
 use Onlyoung4u\AsApi\Middleware\ActionLog;
 use Onlyoung4u\AsApi\Middleware\Auth;
@@ -57,6 +59,12 @@ class BaseRoute
 
             // 修改密码
             Route::post('/reset_pwd', [AuthController::class, 'resetPwd'])->name('resetPwd');
+
+            // 配置字典
+            Route::get('/config/dict', [ConfigController::class, 'configDict'])->name('config.dict');
+
+            // 通用上传
+             Route::post('/upload', [UploadController::class, 'upload'])->name('upload');
         })->middleware([
             config('plugin.onlyoung4u.as-api.app.middleware.auth', Auth::class),
             config('plugin.onlyoung4u.as-api.app.middleware.action_log', ActionLog::class),
@@ -66,6 +74,18 @@ class BaseRoute
          * 权限路由
          */
         Route::group('/admin', function () {
+            // 配置管理
+            Route::get('/config', [ConfigController::class, 'configList'])->name('system.config.list');
+            Route::post('/config', [ConfigController::class, 'configCreate'])->name('system.config.create');
+            Route::post('/config/sort', [ConfigController::class, 'configSort'])->name('system.config.sort');
+            Route::put('/config/{id:\d+}', [ConfigController::class, 'configUpdate'])->name('system.config.update');
+            Route::delete('/config/{id:\d+}', [ConfigController::class, 'configDel'])->name('system.config.delete');
+
+            // 系统设置
+            Route::get('/configs/group', [ConfigController::class, 'configGroup'])->name('system.configs');
+            Route::get('/configs', [ConfigController::class, 'configListByGroup'])->name('system.configs');
+            Route::post('/configs', [ConfigController::class, 'configBatchStore'])->name('system.configs.store');
+
             // 角色
             Route::get('/menus', [RoleController::class, 'menuTree'])->name('role.list');
             Route::get('/role', [RoleController::class, 'roleList'])->name('role.list');

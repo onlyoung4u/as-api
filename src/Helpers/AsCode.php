@@ -1,6 +1,6 @@
 <?php
 
-namespace Onlyoung4u\AsApi\Kernel;
+namespace Onlyoung4u\AsApi\Helpers;
 
 class AsCode
 {

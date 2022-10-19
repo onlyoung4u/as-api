@@ -3,13 +3,17 @@ return [
     'enable' => true,
 
     'max_page_size' => 100,
-    'code_adapter' => \Onlyoung4u\AsApi\Kernel\AsCode::class,
+    'code_adapter' => \Onlyoung4u\AsApi\Helpers\AsCode::class,
 
     'middleware' => [
         'auth' => \Onlyoung4u\AsApi\Middleware\Auth::class,
         'action_log' => \Onlyoung4u\AsApi\Middleware\ActionLog::class,
         'permission' => \Onlyoung4u\AsApi\Middleware\Permission::class,
     ],
+
+    'index_url' => 'http://127.0.0.1:8787/',
+
+    'upload_base_path' => 'storage',
 
     'cors' => [
         'origin' => '*',

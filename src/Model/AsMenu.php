@@ -12,6 +12,7 @@ class AsMenu extends BaseModel
     const STATIC_MENU = [
         'login' => '登录',
         'logout' => '登出',
+        'upload' => '上传',
         'resetPwd' => '修改密码',
     ];
 
