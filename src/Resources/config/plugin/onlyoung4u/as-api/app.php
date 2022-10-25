@@ -22,6 +22,11 @@ return [
         'headers' => 'Content-Type,Authorization,X-Requested-With,Accept,Origin',
     ],
 
+    'validator' => [
+        'lang' => 'zh_CN',
+        'lang_path' => base_path('/resources/validator/lang'),
+    ],
+
     'jwt' => [
         'default' => [
             // 算法类型

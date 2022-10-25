@@ -64,6 +64,33 @@ class AsUser extends BaseModel
     }
 
     /**
+     * @param int $id
+     * @param bool $safeMode
+     * @return  \Illuminate\Database\Eloquent\Model|null
+     * @throws AsUnauthorizedException
+     */
+    public static function getUserDetail(int $id = 0, bool $safeMode = true)
+    {
+        if ($id == 0) $id = self::getCurrentUserId($safeMode);
+
+        try {
+            $user = self::findOrFail($id);
+
+            if ($user->status != AsConstant::STATUS_AVAILABLE) {
+                throw new AsErrorException('用户已禁用');
+            }
+
+            return $user;
+        } catch (AsErrorException $exception) {
+            if ($safeMode) throw $exception;
+        } catch (Throwable) {
+            if ($safeMode) throw new AsUnauthorizedException();
+        }
+
+        return null;
+    }
+
+    /**
      * 保存
      *
      * @param array $data

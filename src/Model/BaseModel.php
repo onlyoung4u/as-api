@@ -88,7 +88,9 @@ class BaseModel extends Model
     public static function baseDel(int $id): void
     {
         try {
-            static::where(static::getKey(), $id)->delete();
+            $sql = self::findOrFail($id);
+
+            $sql->delete();
         } catch (\Throwable $exception) {
             static::handleError($exception);
         }
