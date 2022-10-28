@@ -303,7 +303,7 @@ class AsConfig extends BaseModel
             $config = [];
 
             foreach ($list as $item) {
-                $config[$item['name']] = $item;
+                $config[$item['key']] = $item;
             }
 
             Redis::set(self::CACHE_KEY, json_encode($config, JSON_UNESCAPED_UNICODE));
