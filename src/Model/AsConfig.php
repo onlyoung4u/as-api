@@ -142,7 +142,7 @@ class AsConfig extends BaseModel
 
                 return json_encode($data, JSON_UNESCAPED_UNICODE);
             default:
-                return $value ?: '';
+                return $value ?? '';
         }
     }
 
