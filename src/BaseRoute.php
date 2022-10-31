@@ -10,6 +10,7 @@ use Onlyoung4u\AsApi\Controller\UploadController;
 use Onlyoung4u\AsApi\Controller\UserController;
 use Onlyoung4u\AsApi\Middleware\ActionLog;
 use Onlyoung4u\AsApi\Middleware\Auth;
+use Onlyoung4u\AsApi\Middleware\CORS;
 use Onlyoung4u\AsApi\Middleware\Permission;
 use Webman\Route;
 
@@ -27,7 +28,9 @@ class BaseRoute
          */
         Route::options('/admin/{path:.+}', function () {
             return response();
-        });
+        })->middleware([
+            CORS::class,
+        ]);
 
         /**
          * 登录
