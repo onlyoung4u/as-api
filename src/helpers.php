@@ -99,7 +99,7 @@ if (!function_exists('as_generate_unique_id')) {
      */
     function as_generate_unique_id(string $prefix = ''): string
     {
-        return uniqid($prefix) . time();
+        return uniqid($prefix . rand(10000, 99999)) . time();
     }
 }
 

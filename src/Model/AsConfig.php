@@ -284,7 +284,7 @@ class AsConfig extends BaseModel
      * @param string $key
      * @return mixed|null
      */
-    public static function getConfig(string $key): mixed
+    public static function getConfig(string $key, $default = null): mixed
     {
         if (empty($key)) return null;
 
@@ -311,7 +311,7 @@ class AsConfig extends BaseModel
             $config = json_decode($cache, true);
         }
 
-        return $config[$key] ?? null;
+        return $config[$key] ?? $default;
     }
 
     /**
@@ -320,11 +320,11 @@ class AsConfig extends BaseModel
      * @param string $key
      * @return array|mixed|string|null
      */
-    public static function getConfigValue(string $key): mixed
+    public static function getConfigValue(string $key, $default = null): mixed
     {
         $config = self::getConfig($key);
 
-        if (empty($config)) return null;
+        if (is_null($config)) return $default;
 
         $value = $config['value'];
 
