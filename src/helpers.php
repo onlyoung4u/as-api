@@ -108,15 +108,19 @@ if (!function_exists('as_get_file_extension')) {
      * 根据文件名获取扩展名
      *
      * @param string $fileName
+     * @param bool $withDot
      * @return string
      */
-    function as_get_file_extension(string $fileName): string
+    function as_get_file_extension(string $fileName, bool $withDot = true): string
     {
         $arr = explode('.', $fileName);
         $len = count($arr);
 
         $extension = '';
-        if ($len > 1) $extension = '.' . $arr[$len - 1];
+
+        if ($len > 1) {
+            $extension = ($withDot ? '.' : '') . strtolower($arr[$len - 1]);
+        }
 
         return $extension;
     }

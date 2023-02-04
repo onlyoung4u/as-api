@@ -30,14 +30,11 @@ class BaseModel extends Model
      * 错误处理
      *
      * @param $exception
-     * @param bool $throwError
      * @return false
      * @throws AsErrorException
      */
-    public static function handleError($exception, bool $throwError = true): bool
+    public static function handleError($exception): void
     {
-        if (!$throwError) return false;
-
         if ($exception instanceof AsErrorException) {
             throw $exception;
         }
