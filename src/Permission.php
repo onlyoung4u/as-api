@@ -198,8 +198,6 @@ class Permission
      */
     public function userBindRoles(int $uid, array $roles, bool $isAdd = false): void
     {
-        Db::beginTransaction();
-
         try {
             if ($isAdd) {
                 $existRoles = AsRule::where('type', self::TYPE_USER)
@@ -233,11 +231,8 @@ class Permission
                 AsRule::insert($insertData);
             }
 
-            Db::commit();
-
             $this->refresh();
         } catch (Throwable) {
-            Db::rollBack();
             throw new AsErrorException();
         }
     }
