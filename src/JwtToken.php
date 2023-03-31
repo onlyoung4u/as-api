@@ -265,7 +265,7 @@ class JwtToken
 
         // 单点登录
         if ($config['is_single_sign_in']) {
-            $id = $decoded['extend'][self::CACHE_TOKEN_PREFIX];
+            $id = $decoded['extend'][self::EXTEND_ID];
 
             $cacheToken = Redis::get($this->getCacheKey($id));
 
