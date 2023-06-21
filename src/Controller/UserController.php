@@ -122,7 +122,7 @@ class UserController extends Base
     {
         $this->validateIdWithResponse($id);
 
-        $data = $this->userParams($request);
+        $data = $this->userParams($request, true);
 
         AsUser::store($data, $request->uid, $id);
 
