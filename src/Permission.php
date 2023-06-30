@@ -5,6 +5,7 @@ namespace Onlyoung4u\AsApi;
 use Onlyoung4u\AsApi\Kernel\Exception\AsErrorException;
 use Onlyoung4u\AsApi\Model\AsRule;
 use support\Db;
+use support\Redis;
 use Throwable;
 
 class Permission
@@ -12,6 +13,7 @@ class Permission
     public function __construct(string $scope)
     {
         $this->scope = $scope;
+        $this->loadTime = Redis::get($this->getCacheTimeKey()) ?? time();
     }
 
     const TYPE_ROLE = 'r';
@@ -23,6 +25,13 @@ class Permission
      * @var string
      */
     private string $scope;
+
+    /**
+     * 加载时间
+     *
+     * @var int
+     */
+    private int $loadTime;
 
     /**
      * 用户角色
@@ -52,8 +61,7 @@ class Permission
      */
     public function refresh(): void
     {
-        $this->rules = [];
-        $this->roles = [];
+        Redis::set($this->getCacheTimeKey(), time());
     }
 
     /**
@@ -238,6 +246,41 @@ class Permission
     }
 
     /**
+     * 获取缓存key
+     *
+     * @return string
+     */
+    private function getCacheTimeKey(): string
+    {
+        return 'as_permission_' . $this->scope . '_refresh_time';
+    }
+
+    /**
+     * 是否需要重新刷新
+     *
+     * @return bool
+     */
+    private function isNeedRefresh(): bool
+    {
+        if (empty($this->rules) || empty($this->roles)) {
+            return true;
+        }
+
+        $cacheTime = Redis::get($this->getCacheTimeKey());
+
+        if ($cacheTime && $cacheTime != $this->loadTime) {
+            $this->rules = [];
+            $this->roles = [];
+
+            $this->loadTime = $cacheTime;
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * 获取用户角色
      *
      * @param int $uid
@@ -245,7 +288,7 @@ class Permission
      */
     public function getRules(int $uid = 0): array
     {
-        if (empty($this->rules)) {
+        if ($this->isNeedRefresh()) {
             $rules = [];
 
             $list = AsRule::where('type', self::TYPE_USER)
@@ -253,13 +296,11 @@ class Permission
                 ->get();
 
             foreach ($list as $item) {
-                $uid = $item->v1;
-
-                if (!isset($rules[$uid])) {
-                    $rules[$uid] = [];
+                if (!isset($rules[$item->v1])) {
+                    $rules[$item->v1] = [];
                 }
 
-                $rules[$uid][] = $item->v2;
+                $rules[$item->v1][] = $item->v2;
             }
 
             $this->rules = $rules;
@@ -278,7 +319,7 @@ class Permission
      */
     public function getRoles(int $roleId = 0): array
     {
-        if (empty($this->roles)) {
+        if ($this->isNeedRefresh()) {
             $roles = [];
 
             $list = AsRule::where('type', self::TYPE_ROLE)
@@ -286,13 +327,11 @@ class Permission
                 ->get();
 
             foreach ($list as $item) {
-                $roleId = $item->v1;
-
-                if (!isset($roles[$roleId])) {
-                    $roles[$roleId] = [];
+                if (!isset($roles[$item->v1])) {
+                    $roles[$item->v1] = [];
                 }
 
-                $roles[$roleId][] = $item->v2;
+                $roles[$item->v1][] = $item->v2;
             }
 
             $this->roles = $roles;
