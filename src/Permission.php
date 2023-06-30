@@ -262,10 +262,6 @@ class Permission
      */
     private function isNeedRefresh(): bool
     {
-        if (empty($this->rules) || empty($this->roles)) {
-            return true;
-        }
-
         $cacheTime = Redis::get($this->getCacheTimeKey());
 
         if ($cacheTime && $cacheTime != $this->loadTime) {
@@ -288,7 +284,8 @@ class Permission
      */
     public function getRules(int $uid = 0): array
     {
-        if ($this->isNeedRefresh()) {
+        if (empty($this->rules) || $this->isNeedRefresh()) {
+            var_dump(11);
             $rules = [];
 
             $list = AsRule::where('type', self::TYPE_USER)
@@ -319,7 +316,7 @@ class Permission
      */
     public function getRoles(int $roleId = 0): array
     {
-        if ($this->isNeedRefresh()) {
+        if (empty($this->roles) || $this->isNeedRefresh()) {
             $roles = [];
 
             $list = AsRule::where('type', self::TYPE_ROLE)
