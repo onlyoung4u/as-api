@@ -285,7 +285,6 @@ class Permission
     public function getRules(int $uid = 0): array
     {
         if (empty($this->rules) || $this->isNeedRefresh()) {
-            var_dump(11);
             $rules = [];
 
             $list = AsRule::where('type', self::TYPE_USER)
