@@ -3,6 +3,7 @@
 use Carbon\Carbon;
 use Onlyoung4u\AsApi\Helpers\Bcrypt;
 use Onlyoung4u\AsApi\Helpers\AsValidator;
+use Onlyoung4u\AsApi\Kernel\Exception\AsErrorException;
 
 if (!function_exists('as_bcrypt')) {
     /**
@@ -181,5 +182,20 @@ if (!function_exists('as_get_file_path')) {
         $prefix = config('plugin.onlyoung4u.as-api.app.upload_file.url', 'http://127.0.0.1:8787/');
 
         return str_replace($prefix, '', $url);
+    }
+}
+
+if (!function_exists('as_error_throw')) {
+    /**
+     * 通用错误抛出
+     *
+     * @param string $message
+     * @param int $code
+     * @return void
+     * @throws AsErrorException
+     */
+    function as_error_throw(string $message = '', int $code = 0): void
+    {
+        throw new AsErrorException($message, $code);
     }
 }

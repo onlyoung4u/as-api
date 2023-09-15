@@ -5,6 +5,7 @@ namespace Onlyoung4u\AsApi\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Onlyoung4u\AsApi\Kernel\Exception\AsErrorException;
 use support\Db;
+use support\Log;
 use support\Model;
 
 class BaseModel extends Model
@@ -39,7 +40,13 @@ class BaseModel extends Model
             throw $exception;
         }
 
-        throw new AsErrorException(config('app.debug') ? $exception->getMessage() : '');
+        $debug = config('app.debug', false);
+
+        if (!$debug) {
+            Log::debug($exception->getMessage(), $exception->getTrace());
+        }
+
+        throw new AsErrorException($debug ? $exception->getMessage() : '');
     }
 
     /**
