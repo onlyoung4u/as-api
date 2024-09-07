@@ -218,9 +218,9 @@ class AsConfig extends BaseModel
 
             foreach ($data as $key => $value) {
                 if ($key == 'extra') {
-                    $config->$key = $isExtra ? $value : '';
+                    $config->setAttribute($key, $isExtra ? $value : '');
                 } else {
-                    $config->$key = $value;
+                    $config->setAttribute($key, $value);
                 }
             }
 

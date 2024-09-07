@@ -127,7 +127,7 @@ class AsUser extends BaseModel
 
             foreach ($data as $key => $value) {
                 if ($key == 'password' || $key == 'roles') continue;
-                $sql->$key = $value;
+                $sql->setAttribute($key, $value);
             }
 
             // 密码

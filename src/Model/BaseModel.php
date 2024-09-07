@@ -69,7 +69,7 @@ class BaseModel extends Model
             }
 
             foreach ($data as $key => $value) {
-                $sql->$key = $value;
+                $sql->setAttribute($key, $value);
             }
 
             $sql->save();
@@ -130,7 +130,7 @@ class BaseModel extends Model
             }
 
             foreach ($data as $key => $value) {
-                $sql->$key = $value;
+                $sql->setAttribute($key, $value);
             }
 
             $sql->save();
